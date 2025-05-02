@@ -1,0 +1,116 @@
+
+<link rel="stylesheet" href="./menu.php">
+
+
+<style>
+  .bgcolor {
+      background-image: url(https://images.pexels.com/photos/326333/pexels-photo-326333.jpeg);
+      background-position: center;
+      background-size: cover;
+      background-repeat: none;
+  }
+
+  .navcolor {
+      background-color: #004e92;
+  }
+
+  .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .cart-container {
+      position: relative;
+      display: inline-block;
+  }
+
+  .icon {
+      font-size: 2rem;
+      color: black;
+  }
+
+  .counter-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      gap: 10px;
+  }
+
+  .counter-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+  }
+
+  button {
+      font-size: 1.2rem;
+      padding: 5px 10px;
+      border: none;
+      background-color: #f1f1f1;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+  }
+
+  button:hover {
+      background-color: #ddd;
+  }
+
+  #cart-counter {
+      position: absolute;
+      top: -8px;
+      right: -12px;
+      background-color: red;
+      color: white;
+      font-size: 0.8rem;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .cart-items {
+      list-style-type: none;
+      padding: 0;
+  }
+
+  .cart-items li {
+      padding: 10px;
+      margin: 5px 0;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+
+  .remove-btn {
+      cursor: pointer;
+      color: red;
+      font-weight: bold;
+  }
+
+  .quantity {
+      font-weight: bold;
+      margin-left: 10px;
+  }
+
+  .counter {
+      font-size: 1.5rem;
+      font-weight: bold;
+  }
+  .sticky-navbar {
+      position: sticky;
+      top: 80px; /* Adjust this value based on where you want it to stick relative to the viewport */
+      z-index: 1030; /* Ensure it appears above other content */
+      background-color: dark; /* Set background color if needed */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+      padding-left: 10;
+  }
+
+
+</style>
+<h1 class="fw-bold fixed-top"></h1>

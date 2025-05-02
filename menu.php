@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Menu - DelightInn</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
@@ -34,6 +34,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
+
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+            emailjs.init("R0oyRXmBMHhZacSnO"); // Replace with your actual Public Key
+        })();
+    </script>
+
+
 </head>
 
 <body>
@@ -47,16 +56,14 @@
     <section class="sec-1">
         <div class='wrapper'>
             <?php include 'navbar.php';?>
-            <?php include 'header.php'; ?> 
         </div>
     </section>
     <!-- </div> -->
-    <?php include 'loginmodal.php'; ?>
-    <?php include 'signupmodal.php'; ?>
+   
     <!-- navbar end -->
 
     <!-- Category Slider Starts--> 
-<section class="sec-m2 bgcolor mt-5 " style="min-height: 700px; ">
+<section class="sec-m2 bgcolor" style="min-height: 700px; ">
 
     <nav class="navbar " >
         <form class="container-fluid justify-content-center " style="margin-top: 30px" >
@@ -480,7 +487,7 @@ function submitCart() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred. Please try again.'); // More generic error message
+        alert('Please Login First to Place Order'); // More generic error message
     });
 }
 

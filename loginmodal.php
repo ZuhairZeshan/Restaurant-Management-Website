@@ -26,7 +26,7 @@
           }
         ?>
         <!-- login Form start -->
-        <form action="/Restaurant-Management Website/_handlelogin.php" method="post">
+        <form action="/Restaurant-Management-Website/_handlelogin.php" method="post">
           <div class="mb-3">
             <label for="loginemail" class="form-label">Email Address</label>
             <input type="email" class="form-control" id="loginemail" name="loginemail" aria-describedby="emailHelp">

@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->query("UPDATE tables SET is_occupied = TRUE WHERE id = $table_id");
 
     echo "<script>alert('Reservation submitted. Please wait for admin approval.');
-    window.location.href = '/Restaurant-Management Website/reservation.php'</script>";
+    window.location.href = '/Restaurant-Management-Website/reservation.php'</script>";
             
 }
 ?>

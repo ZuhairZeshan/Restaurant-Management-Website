@@ -76,6 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
 
     echo "<script>alert('Reservation status updated to \"$status\".');
-    window.location.href = '/Restaurant-Management Website/admin_reserve.php'</script>";
+    window.location.href = '/Restaurant-Management-Website/admin_reserve.php'</script>";
 }
 ?>

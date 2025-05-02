@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     echo "Done";
     if(trim($_POST['loginemail']) == 'admin@123' && trim($_POST['loginpassword']) == '123'){
-        header('Location: /Restaurant-Management Website/admin.php');
+        header('Location: /Restaurant-Management-Website/admin.php');
         exit();
     }
 
@@ -29,16 +29,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $_SESSION['loggedin'] = true;
             $_SESSION['sno'] = $row['User_id'];
             $_SESSION['username'] = $row['User_name'];
-            header('Location: /Restaurant-Management Website/index.php');
+            header('Location: /Restaurant-Management-Website/index.php');
             exit();
         } else {
            // Reload the modal with the invalid flag set
-            header("Location: /Restaurant-Management Website/index.php?loginerror=true"); 
+            header("Location: /Restaurant-Management-Website/index.php?loginerror=true"); 
             exit();
         }
     } else {
        // Reload the modal with the invalid flag set
-        header("Location: /Restaurant-Management Website/index.php?loginerror=true"); 
+        header("Location: /Restaurant-Management-Website/index.php?loginerror=true"); 
         exit();
     }
     

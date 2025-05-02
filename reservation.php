@@ -127,7 +127,7 @@
                 <?php
                 // Check if the user is logged in
                 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-                    echo "<script>window.location.href = '/Restaurant-Management Website/index.php'</script>";
+                    echo "<script>window.location.href = '/Restaurant-Management-Website/index.php'</script>";
                     exit();
                 }
                                     // Fetch user's reservations

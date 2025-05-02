@@ -55,7 +55,7 @@
                 $sql = "UPDATE `categories` SET `Category_id` = '$newid', `Category_name` = '$newname' WHERE `Category_id` = '$id'";
                 $result = mysqli_query($conn, $sql);
                 if ($result) {
-                    header('Location: /Restaurant-Management Website/admin.php');
+                    header('Location: /Restaurant-Management-Website/admin.php');
                 } else {
                     echo '<div class="alert alert-danger">Error updating category.</div>';
                 }
@@ -80,7 +80,7 @@
                 $sql2 = "UPDATE `items` SET `Item_id` = '$newid', `Item_image` = '$newimageurl', `Item_name` = '$newname', `Item_description` = '$newdesc', `Price` = '$newprice', `cat_id` = '$newcatid' WHERE `Item_id` = '$id'";
                 $result = mysqli_query($conn, $sql2);
                 if ($result) {
-                    header('Location: /Restaurant-Management Website/admin.php');
+                    header('Location: /Restaurant-Management-Website/admin.php');
                 } else {
                     echo '<div class="alert alert-danger">Error updating item.</div>';
                 }

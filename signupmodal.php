@@ -37,7 +37,7 @@
           }
         ?>
         <!-- signup Form start -->
-        <form action="/Restaurant-Management Website/_handlesignup.php" method="POST">
+        <form action="/Restaurant-Management-Website/_handlesignup.php" method="POST">
           <div class="mb-3">
             <label for="signupname" class="form-label">Full Name</label>
             <input type="text" class="form-control" id="signupname" name="signupname" aria-describedby="emailHelp">

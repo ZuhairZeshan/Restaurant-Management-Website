@@ -443,75 +443,137 @@ function initializeCart() {
     }
 }
 
-// Function to submit the cart for checkout
 function submitCart() {
     console.log("Confirm Order button clicked");
 
     // Check if cart is empty
     if (!cart || Object.keys(cart).length === 0) {
         showModalError("Select at least one item to continue.");
-        return; // Stop further execution
+        return;
     }
 
-    // Check if user is logged in (assuming user_id is stored in a hidden field or global variable)
-    let userId = <?php echo isset($_SESSION['sno']) ? json_encode($_SESSION['sno']) : 'null'; ?>;
+    const userId = <?php echo isset($_SESSION['sno']) ? json_encode($_SESSION['sno']) : 'null'; ?>;
 
     if (!userId) {
         showModalError("Login First to Continue.");
-        return; // Stop further execution
+        return;
     }
 
-    const cartData = JSON.stringify(cart);
-    const deliveryMethod = document.getElementById('deliveryMethod').value;
-    const paymentMethod = document.getElementById('paymentMethod').value;
-
-    let paymentDetails = {};
-    if (paymentMethod === 'online') {
-        paymentDetails = {
-            cardNumber: document.getElementById('cardNumber').value,
-            cardExpiry: document.getElementById('cardExpiry').value,
-            cardCVV: document.getElementById('cardCVV').value
-        };
-    }
-
-    const orderData = {
-        userId: userId,
-        cartData: cartData,
-        deliveryMethod: deliveryMethod,
-        paymentMethod: paymentMethod,
-        paymentDetails: paymentDetails
-    };
-
-    console.log("Order Data:", orderData);
-
-    fetch('order.php', {
+    // Step: Fetch user email from database using userId
+    fetch('get_user_email.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(orderData)
+        body: JSON.stringify({ userId })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log(data);
-        if (data.status === 'success') {
-            alert(data.message);
-            localStorage.removeItem('cart');
-            window.location.href = 'order_success.php';
-        } else {
-            showModalError(data.message);
+        if (data.status !== 'success') {
+            showModalError(data.message || "Failed to retrieve email.");
+            return;
         }
+
+        const userEmail = data.email;
+        const cartData = JSON.stringify(cart);
+        const deliveryMethod = document.getElementById('deliveryMethod').value;
+        const paymentMethod = document.getElementById('paymentMethod').value;
+
+        let paymentDetails = {};
+        if (paymentMethod === 'online') {
+            paymentDetails = {
+                cardNumber: document.getElementById('cardNumber').value,
+                cardExpiry: document.getElementById('cardExpiry').value,
+                cardCVV: document.getElementById('cardCVV').value
+            };
+        }
+
+        const orderData = {
+            userId: userId,
+            cartData: cartData,
+            deliveryMethod: deliveryMethod,
+            paymentMethod: paymentMethod,
+            paymentDetails: paymentDetails
+        };
+
+        console.log("Order Data:", orderData);
+
+        fetch('order.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network error');
+            return response.json();
+        })
+        .then(orderRes => {
+            console.log(orderRes);
+            if (orderRes.status === 'success') {
+                alert(orderRes.message);
+
+                // Place the email sending call after the order has been successfully placed
+                sendOrderConfirmationEmail(userEmail, orderData, cart);
+
+                // Clear the cart from localStorage
+                localStorage.removeItem('cart');
+
+                // Redirect the user to the order success page
+                window.location.href = 'order_success.php';
+            } else {
+                showModalError(orderRes.message);
+            }
+        })
+        .catch(err => {
+            console.error('Order Error:', err);
+            showModalError('Unexpected error occurred. Please try again.');
+        });
+
     })
     .catch(error => {
-        console.error('Error:', error);
-        showModalError('An unexpected error occurred. Please try again.');
+        console.error('Email Fetch Error:', error);
+        showModalError('Failed to retrieve user email.');
     });
 }
+
+
+
+function sendOrderConfirmationEmail(userEmail, orderData, cart) {
+    emailjs.init("R0oyRXmBMHhZacSnO"); // Replace with your EmailJS User ID
+
+    let cartItemsHTML = '<ul style="list-style-type: none; padding: 0;">';
+    let totalPrice = 0;
+    for (const productId in cart) {
+        const item = cart[productId];
+        cartItemsHTML += `<li>${item.name} (Quantity: ${item.quantity}, Price: $${item.price})</li>`;
+        totalPrice += item.price * item.quantity;
+    }
+    cartItemsHTML += '</ul>';
+
+    const templateParams = {
+        to_email: userEmail,
+        user_id: orderData.userId,
+        delivery_method: orderData.deliveryMethod,
+        payment_method: orderData.paymentMethod,
+        payment_details: orderData.paymentMethod === 'online' ? `Card Number: ****-****-****-${orderData.paymentDetails.cardNumber.slice(-4)}` : 'Cash on Delivery',
+        cart_items: cartItemsHTML,
+        total_price: `$${totalPrice.toFixed(2)}`
+        // You can add more order details here as needed
+    };
+
+    emailjs.send("service_pdr0zau", "template_fd3gqyi", templateParams) // Replace with your Service ID and Template ID
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
+            // Optionally show a success message to the user that an email has been sent
+        }, function(error) {
+            console.log('FAILED...', error);
+            // Optionally show an error message to the user that the email could not be sent
+        });
+}
+
+// Make sure to include the EmailJS SDK in your HTML file:
 
 //modal errors
 function showModalError(message) {
@@ -529,6 +591,7 @@ function showModalError(message) {
 window.onload = initializeCart;
 </script>
 <!-- Card Java Ends -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
 
 </body>

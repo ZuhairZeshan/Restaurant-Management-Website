@@ -512,10 +512,10 @@ function submitCart() {
         .then(orderRes => {
             console.log(orderRes);
             if (orderRes.status === 'success') {
-                alert(orderRes.message);
-
                 // Place the email sending call after the order has been successfully placed
                 sendOrderConfirmationEmail(userEmail, orderData, cart);
+                alert(orderRes.message);
+
 
                 // Clear the cart from localStorage
                 localStorage.removeItem('cart');
@@ -541,37 +541,40 @@ function submitCart() {
 
 
 function sendOrderConfirmationEmail(userEmail, orderData, cart) {
-    emailjs.init("R0oyRXmBMHhZacSnO"); // Replace with your EmailJS User ID
+    emailjs.init("R0oyRXmBMHhZacSnO"); // EmailJS Public Key
 
-    let cartItemsHTML = '<ul style="list-style-type: none; padding: 0;">';
+    let cartItemsHTML = '';
     let totalPrice = 0;
+
     for (const productId in cart) {
         const item = cart[productId];
-        cartItemsHTML += `<li>${item.name} (Quantity: ${item.quantity}, Price: $${item.price})</li>`;
+        cartItemsHTML += `${item.name} — Quantity: ${item.quantity} — Price: $${item.price}<br>`;
         totalPrice += item.price * item.quantity;
     }
-    cartItemsHTML += '</ul>';
+
+
+    // cartItemsHTML += '</ul>';
 
     const templateParams = {
         to_email: userEmail,
-        user_id: orderData.userId,
-        delivery_method: orderData.deliveryMethod,
-        payment_method: orderData.paymentMethod,
-        payment_details: orderData.paymentMethod === 'online' ? `Card Number: ****-****-****-${orderData.paymentDetails.cardNumber.slice(-4)}` : 'Cash on Delivery',
         cart_items: cartItemsHTML,
-        total_price: `$${totalPrice.toFixed(2)}`
-        // You can add more order details here as needed
+        total_amount: `$${totalPrice.toFixed(2)}`,
+        order_date: new Date().toLocaleDateString(),
+        delivery_method: orderData.deliveryMethod,
+        payment_method: orderData.paymentMethod === 'online'
+            ? 'Online (Card Payment)'
+            : 'Cash on Delivery'
     };
 
-    emailjs.send("service_pdr0zau", "template_fd3gqyi", templateParams) // Replace with your Service ID and Template ID
+    emailjs.send("service_pdr0zau", "template_fd3gqyi", templateParams)
         .then(function(response) {
             console.log('SUCCESS!', response.status, response.text);
-            // Optionally show a success message to the user that an email has been sent
         }, function(error) {
             console.log('FAILED...', error);
-            // Optionally show an error message to the user that the email could not be sent
         });
 }
+
+
 
 // Make sure to include the EmailJS SDK in your HTML file:
 

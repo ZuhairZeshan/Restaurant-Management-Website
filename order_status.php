@@ -63,28 +63,34 @@
               </tr>
             </thead>
             <tbody>
-              <?php
-              // Fetch current orders (both Approved and Pending)
-              $userId=$_SESSION['sno'];
-              $sqlCurrent = "SELECT * FROM orders WHERE user_id = ? AND (Order_status = 'Approved' OR Order_status = 'Pending')";
-              $stmtCurrent = $conn->prepare($sqlCurrent);
-              $stmtCurrent->bind_param("i", $userId);
-              $stmtCurrent->execute();
-              $resultCurrent = $stmtCurrent->get_result();
+            <?php
+              if (isset($_SESSION['sno'])) {
+                // User is logged in
+                $userId = $_SESSION['sno'];
+                $sqlCurrent = "SELECT * FROM orders WHERE user_id = ? AND (Order_status = 'Approved' OR Order_status = 'Pending')";
+                $stmtCurrent = $conn->prepare($sqlCurrent);
+                $stmtCurrent->bind_param("i", $userId);
+                $stmtCurrent->execute();
+                $resultCurrent = $stmtCurrent->get_result();
 
-              if ($resultCurrent->num_rows > 0) {
-                while ($row = $resultCurrent->fetch_assoc()) {
-                  echo "<tr>";
-                  echo "<td>" . $row['Order_id'] . "</td>";
-                  echo "<td>" . $row['Order_date'] . "</td>";
-                  echo "<td>$" . $row['Total_amount'] . "</td>";
-                  echo "<td>" . $row['Order_status'] . "</td>";
-                  echo "</tr>";
+                if ($resultCurrent->num_rows > 0) {
+                  while ($row = $resultCurrent->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $row['Order_id'] . "</td>";
+                    echo "<td>" . $row['Order_date'] . "</td>";
+                    echo "<td>$" . $row['Total_amount'] . "</td>";
+                    echo "<td>" . $row['Order_status'] . "</td>";
+                    echo "</tr>";
+                  }
+                } else {
+                  echo "<tr><td colspan='4'>No current orders found.</td></tr>";
                 }
               } else {
-                echo "<tr><td colspan='4'>No current orders found.</td></tr>";
+                // User is not logged in
+                echo "<tr><td colspan='4'>Please Login to See Your Current Orders.</td></tr>";
               }
-              ?>
+            ?>
+
             </tbody>
           </table>
         </div>
@@ -101,29 +107,36 @@
               </tr>
             </thead>
             <tbody>
-              <?php
-              // Fetch past orders
-              $sqlPast = "SELECT * FROM orders WHERE user_id = ? AND (Order_status != 'Approved' AND Order_status != 'Pending')";
-              $stmtPast = $conn->prepare($sqlPast);
-              $stmtPast->bind_param("i", $userId);
-              $stmtPast->execute();
-              $resultPast = $stmtPast->get_result();
+            <?php
+              if (isset($_SESSION['sno'])) {
+                // User is logged in
+                $userId = $_SESSION['sno'];
+                $sqlPast = "SELECT * FROM orders WHERE user_id = ? AND (Order_status != 'Approved' AND Order_status != 'Pending')";
+                $stmtPast = $conn->prepare($sqlPast);
+                $stmtPast->bind_param("i", $userId);
+                $stmtPast->execute();
+                $resultPast = $stmtPast->get_result();
 
- if ($resultPast->num_rows > 0) {
-                while ($row = $resultPast->fetch_assoc()) {
-                  echo "<tr>";
-                  echo "<td>" . $row['Order_id'] . "</td>";
-                  echo "<td>" . $row['Order_date'] . "</td>";
-                  echo "<td>$" . $row['Total_amount'] . "</td>";
-                  echo "<td>" . $row['Order_status'] . "</td>";
-                  echo "</tr>";
+                if ($resultPast->num_rows > 0) {
+                  while ($row = $resultPast->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $row['Order_id'] . "</td>";
+                    echo "<td>" . $row['Order_date'] . "</td>";
+                    echo "<td>$" . $row['Total_amount'] . "</td>";
+                    echo "<td>" . $row['Order_status'] . "</td>";
+                    echo "</tr>";
+                  }
+                } else {
+                  echo "<tr><td colspan='4'>No past orders found.</td></tr>";
                 }
-              } else {
-                echo "<tr><td colspan='4'>No past orders found.</td></tr>";
-              }
 
-              $conn->close();
-              ?>
+                $conn->close();
+              } else {
+                // User is not logged in
+                echo "<tr><td colspan='4'>Please Login to See Your Past Orders.</td></tr>";
+              }
+            ?>
+
             </tbody>
           </table>
         </div>

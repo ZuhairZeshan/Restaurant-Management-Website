@@ -113,7 +113,7 @@
     </div>
     <!-- navbar end -->
 
-    <div class="container-fluid px-5 bgcolor text-light pt-3" style="min-height: 1000px">
+    <div class="container-fluid px-3 bgcolor text-light pt-3" style="min-height: 1000px">
         <h1>About Us</h1>
         <p class="pt-3 text-center" style="font-size: 20px"  >Welcome to our website! We are dedicated to providing you with the best experience possible. Our team is passionate about our work and committed to delivering high-quality services.</p>
 
@@ -154,7 +154,7 @@
         </div>
 
         <h2>Why Choose Us?</h2>
-        <p class="pt-2">We believe in transparency, quality, and customer satisfaction. Our team works tirelessly to ensure that you receive the best service possible. Join us on this journey and experience the difference!</p>
+        <p class="pt-2 pb-2">We believe in transparency, quality, and customer satisfaction. Our team works tirelessly to ensure that you receive the best service possible. Join us on this journey and experience the difference!</p>
     </div>
 
     <footer>

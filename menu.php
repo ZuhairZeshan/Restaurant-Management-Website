@@ -161,6 +161,7 @@
                 <h5 class="modal-title" id="cartModalLabel">Shopping Cart</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div id="modalError" class="container" style="color: red; display: none; font-size: 1.1rem; font-weight: bold; text-align: center;"></div>
             <div class="modal-body">
                 <!-- Delivery Method Section -->
                 <div class="form-group mt-2 mb-3">
@@ -234,6 +235,7 @@
                     <button type="button" class="btn btn-primary" id="confirmOrderButton" onclick="submitCart()">Confirm Order</button>
                 </form>
             </div>
+            
         </div>
     </div>
 </div>
@@ -380,15 +382,22 @@ function togglePaymentDetails() {
     }
 }
 
-// Remove item from cart
 function removeFromCart(itemId) {
     if (cart[itemId]) {
         delete cart[itemId]; // Remove item from the cart
+
+        // Reset the quantity displayed on the card
+        const quantitySpan = document.getElementById(`quantity-${itemId}`);
+        if (quantitySpan) {
+            quantitySpan.textContent = '0';
+        }
+
         // Update the modal and cart counter
         updateModal();
         updateCartCounter();
+
         // Save updated cart to localStorage
-        localStorage.setItem('cart ', JSON.stringify(cart));
+        localStorage.setItem('cart', JSON.stringify(cart)); // Make sure key has no trailing space
     }
 }
 
@@ -436,11 +445,25 @@ function initializeCart() {
 
 // Function to submit the cart for checkout
 function submitCart() {
-    console.log("Confirm Order button clicked"); // Debugging line
+    console.log("Confirm Order button clicked");
 
-    const cartData = JSON.stringify(cart); // Serialize cart object as a JSON string
-    const deliveryMethod = document.getElementById('deliveryMethod').value; // Get delivery method
-    const paymentMethod = document.getElementById('paymentMethod').value; // Get payment method
+    // Check if cart is empty
+    if (!cart || Object.keys(cart).length === 0) {
+        showModalError("Select at least one item to continue.");
+        return; // Stop further execution
+    }
+
+    // Check if user is logged in (assuming user_id is stored in a hidden field or global variable)
+    let userId = <?php echo isset($_SESSION['sno']) ? json_encode($_SESSION['sno']) : 'null'; ?>;
+
+    if (!userId) {
+        showModalError("Login First to Continue.");
+        return; // Stop further execution
+    }
+
+    const cartData = JSON.stringify(cart);
+    const deliveryMethod = document.getElementById('deliveryMethod').value;
+    const paymentMethod = document.getElementById('paymentMethod').value;
 
     let paymentDetails = {};
     if (paymentMethod === 'online') {
@@ -451,45 +474,56 @@ function submitCart() {
         };
     }
 
-    // Prepare data to send
     const orderData = {
-        cartData: cartData, // Directly use the object retrieved from local storage
+        userId: userId,
+        cartData: cartData,
         deliveryMethod: deliveryMethod,
         paymentMethod: paymentMethod,
         paymentDetails: paymentDetails
     };
 
-    console.log("Order Data:", orderData); // Log order data before sending
+    console.log("Order Data:", orderData);
 
-    // Send data to server using Fetch API
     fetch('order.php', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json' // Send JSON data
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(orderData) // Serialize order data to JSON
+        body: JSON.stringify(orderData)
     })
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return response.json(); // Parse JSON response from the server
+        return response.json();
     })
     .then(data => {
-        console.log(data); // Log server response for debugging
+        console.log(data);
         if (data.status === 'success') {
-            alert(data.message); // Show success message
-            localStorage.removeItem('cart'); // Clear cart data
-            window.location.href = 'order_success.php'; // Redirect to order success page
+            alert(data.message);
+            localStorage.removeItem('cart');
+            window.location.href = 'order_success.php';
         } else {
-            alert(data.message); // Show error message
+            showModalError(data.message);
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Please Login First to Place Order'); // More generic error message
+        showModalError('An unexpected error occurred. Please try again.');
     });
 }
+
+//modal errors
+function showModalError(message) {
+    const errorElement = document.getElementById('modalError');
+    if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+    } else {
+        alert(message); // fallback
+    }
+}
+
 
 // Call initializeCart on page load
 window.onload = initializeCart;

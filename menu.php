@@ -558,7 +558,7 @@ function sendOrderConfirmationEmail(userEmail, orderData, cart) {
     const templateParams = {
         to_email: userEmail,
         cart_items: cartItemsHTML,
-        total_amount: `$${totalPrice.toFixed(2)}`,
+        total_amount: `Rs. ${totalPrice.toFixed(2)}`,
         order_date: new Date().toLocaleDateString(),
         delivery_method: orderData.deliveryMethod,
         payment_method: orderData.paymentMethod === 'online'

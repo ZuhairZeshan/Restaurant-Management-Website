@@ -1,0 +1,9 @@
+git pull origin main
+git branch
+
+branches: main + Stripe-integration
+
+admin_login with customer_side login => user:admin@123 and pass:123
+
+
+

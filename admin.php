@@ -179,23 +179,27 @@ if (isset($error_message)) {
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
                 <th scope="col">Price</th>
-                <th scope="col">Category ID</th>
+                <th scope="col">Category</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
             <?php 
-                $sql = "SELECT * FROM `items`";
+                $sql = $sql = "SELECT items.*, categories.Category_name FROM items JOIN categories ON items.cat_id = categories.Category_id";
                 $result = mysqli_query($conn, $sql);
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo '
                     <tr>
                         <th scope="row">' . $row['Item_id'] . '</th>
-                        <td>' . substr($row['Item_image'],0,35) . '...</td>
+                        <td>
+                            <a href="' . $row['Item_image'] . '" target="_blank">
+                                <img src="' . $row['Item_image'] . '" alt="Item Image" class="img-thumbnail" style="max-width: 60px; max-height: 60px;">
+                            </a>
+                        </td>
                         <td>' . $row['Item_name'] . '</td>
                         <td>' . substr($row['Item_description'],0,35) . '...</td>
                         <td>' . $row['Price'] . '</td>
-                        <td>' . $row['cat_id'] . '</td>
+                        <td>' . $row['Category_name'] . '</td>
                         <td>
                             <a href="edit.php?item_id=' . $row['Item_id'] . '">
                                 <button type="button" class="btn btn-primary">Edit</button>

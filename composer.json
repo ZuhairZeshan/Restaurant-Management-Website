@@ -1,6 +1,7 @@
 {
     "require": {
         "phpmailer/phpmailer": "^6.9",
-        "sendgrid/sendgrid": "^8.1"
+        "sendgrid/sendgrid": "^8.1",
+        "stripe/stripe-php": "^17.2"
     }
 }

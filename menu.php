@@ -597,6 +597,34 @@ window.onload = initializeCart;
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
 
+
+<!-- Stripe -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    document.getElementById('stripePayButton').addEventListener('click', function () {
+    fetch('create-checkout-session.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            cartData: JSON.stringify(cartData),
+            deliveryMethod: selectedDelivery,
+            userId: sessionUserId
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.url) {
+            window.location.href = data.url; // Redirect to Stripe Checkout
+        } else {
+            alert('Error creating Stripe session');
+        }
+    });
+});
+
+</script>
+
+
 </body>
 
 </html>

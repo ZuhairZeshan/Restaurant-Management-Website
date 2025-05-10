@@ -8,12 +8,10 @@ $session = \Stripe\Checkout\Session::retrieve($session_id);
 $paymentIntent = \Stripe\PaymentIntent::retrieve($session->payment_intent);
 
 if ($session->payment_status === 'paid') {
-    // Create the order in DB
-    // Save user ID, cart, etc. (You can store the session in DB or use webhook for real-time)
-
-    echo "<h2>Payment Successful. Order placed!</h2>";
+    // Log the order in your database as "Paid"
+    // Show confirmation to the user
+    echo "<h1>Thank you! Your order has been placed.</h1>";
 } else {
-    echo "<h2>Payment failed or not completed.</h2>";
+    echo "<h1>Payment not successful.</h1>";
 }
-
 ?>
